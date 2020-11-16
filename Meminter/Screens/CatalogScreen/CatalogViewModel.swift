@@ -7,33 +7,47 @@
 
 import Foundation
 
+enum OptionsAdditing {
+    case addition, new
+}
+
 protocol CatalogViewModelInput: class {
     var onError: ((String?) -> Void)? { get set }
     var onReloadData: (() -> Void)? { get set }
     var memCatalog: [MemModel] { get set }
-    func getCatalog(count: Int, desc: Bool)
+    func getCatalog(_ count: Int, desc: Bool, as option: OptionsAdditing)
 }
 
 final class CatalogViewModel: CatalogViewModelInput {
     let networkService: NetworkServiceInput
     var onError: ((String?) -> Void)?
     var onReloadData: (() -> Void)?
-    var memCatalog = [MemModel]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.onReloadData?()
-            }
-        }
-    }
+    var memCatalog = [MemModel]()
+    
+    private var isLoading = false
     
     init(networkService: NetworkServiceInput) {
         self.networkService = networkService
     }
     
-    func getCatalog(count: Int, desc: Bool = true) {
-        self.networkService.get(.mems(offset: self.memCatalog.count, count: count, desc: desc)) { [weak self] (mems: [MemModel]?, error: String?) in
-            if let mems = mems {
-                self?.memCatalog.append(contentsOf: mems)
+    func getCatalog(_ count: Int, desc: Bool, as option: OptionsAdditing) {
+        guard self.isLoading == false else { return }
+        self.isLoading = true
+        let offset = option == .new ? 0 : self.memCatalog.count
+        self.networkService.get(.mems(offset: offset, count: count, desc: desc)) { [weak self] (mems: [MemModel]?, error: String?) in
+            self?.isLoading = false
+            
+            if let mems = mems, mems.isEmpty == false {
+                switch option {
+                case .new:
+                    self?.memCatalog = mems
+                case .addition:
+                    self?.memCatalog.append(contentsOf: mems)
+                }
+                DispatchQueue.main.async {
+//                    print(self?.memCatalog.count)
+                    self?.onReloadData?()
+                }
             }
             DispatchQueue.main.async {
                 self?.onError?(error)

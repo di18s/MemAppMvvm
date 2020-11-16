@@ -6,8 +6,6 @@ final class WriteTextViewController: UIViewController {
     @IBOutlet private weak var clearText: UIButton!
     @IBOutlet private weak var sendButton: UIButton!
     
-    private var isFirstClearText = true
-
     var viewModel: WriteTextViewModelInput?
     var onEndThisFlow: (() -> Void)?
 
@@ -16,13 +14,12 @@ final class WriteTextViewController: UIViewController {
         super.viewDidLoad()
         
         self.setupUI()
-        self.viewModel?.onError = { [weak self] error in
-            if let error = error {
-                self?.showError(title: "Error", message: error)
-            } else {
-                self?.onEndThisFlow?()
-            }
-        }
+        self.subscribeOnVMUpdates()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.zeroState()
     }
     
     private func setupUI() {
@@ -31,35 +28,49 @@ final class WriteTextViewController: UIViewController {
         self.memsText.layer.shadowOffset = .zero
         self.memsText.layer.shadowRadius = 5
         self.memsText.clipsToBounds = false
- 
-        self.charCounter.text = String(self.memsText.text.count) + " / 50"
+         
+        self.charCounter.text = "\(self.memsText.text.count) / 50"
         self.clearText.addTarget(self, action: #selector(clearBtnPressed), for: .touchUpInside)
     }
     
-    @objc private func clearBtnPressed () {
-        self.memsText.text = ""
-        self.charCounter.text = String(self.memsText.text.count) + " / 50"
-        self.sendButton.isHidden = true
+    private func zeroState() {
+        self.memsText.text = "Напиши что-нибудь тут..."
+        self.charCounter.text = "\(self.memsText.text.count) / 50"
+    }
+    
+    @objc private func clearBtnPressed() {
+        self.viewModel?.clearText()
     }
     
     @IBAction private func sendButtonAction(_ sender: UIButton) {
         guard let text = self.memsText.text else { return }
         self.viewModel?.sendText(text)
     }
+    
+    private func subscribeOnVMUpdates() {
+        self.viewModel?.onError = { [weak self] error in
+            if let error = error {
+                self?.showError(title: "Error", message: error)
+            } else {
+                self?.onEndThisFlow?()
+            }
+        }
+        
+        self.viewModel?.onMemTextUpdate = { [weak self] model in
+            self?.memsText.text = model.memText
+            self?.charCounter.text = model.charCounter
+            self?.sendButton.isHidden = model.sendButtonHidden
+        }
+    }
 }
 
 extension WriteTextViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange,  replacementText text: String) -> Bool {
-        return memsText.text.count + (text.count - range.length) <= 50
+        return self.memsText.text.count + (text.count - range.length) <= 50
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        self.charCounter.text = String(textView.text.count) + " / 50"
-        if let text = self.memsText.text  {
-            self.sendButton.isHidden = text.count < 3
-        } else {
-            self.sendButton.isHidden = true
-        }
+        self.viewModel?.textDidChange(textView.text)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -70,12 +81,6 @@ extension WriteTextViewController: UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if isFirstClearText {
-            self.memsText.text = ""
-            self.charCounter.text = String(self.memsText.text.count) + " / 50"
-            self.sendButton.isHidden = true
-            isFirstClearText = false
-        }
+        self.viewModel?.textBeginEditing()
     }
 }
-

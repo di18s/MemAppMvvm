@@ -19,12 +19,11 @@ final class BuildMemViewController: UIViewController {
     @IBOutlet private weak var sendMem: UIButton!
     @IBOutlet private weak var buildMem: UIImageView!
     @IBOutlet private weak var buildTitle: UILabel!
-
+    @IBOutlet private weak var sendButtonLoader: UIActivityIndicatorView!
+    
     var viewModel: BuildMemViewModelInput?
     var onEndThisFlow: (() -> Void)?
-    
-    private lazy var mem: Mem = Mem()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         hidesBottomBarWhenPushed = true
@@ -32,18 +31,22 @@ final class BuildMemViewController: UIViewController {
         self.picsCollectionContainerView.delegate = self
         self.titlesCollectionContainerView.delegate = self
         self.subscribeOnBuildMemUpdate()
-        self.viewModel?.getMemPics(select: 3, count: 3)
-        self.viewModel?.getMemTitles(select: 3, count: 3)
+        self.viewModel?.getMemPics(select: 12, count: 12)
+        self.viewModel?.getMemTitles(select: 12, count: 12)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.viewModel?.clear()
+        self.clear()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if self.viewModel?.userDefaultsProvider.checkFor(key: .isFirstAppear) == true {
-            self.wowwowEasy(#imageLiteral(resourceName: "choice"), title: "Собери мемас", message: "Картинка + выражение.\nНе спрашивай. Так надо!") {
-                self.viewModel?.userDefaultsProvider.saveValue(value: false, for: .isFirstAppear)
-            }
-        }
+        self.viewModel?.didAppear()
     }
+    
+    
     
     private func subscribeOnBuildMemUpdate() {
         self.viewModel?.onError = { [weak self] error in
@@ -62,18 +65,49 @@ final class BuildMemViewController: UIViewController {
                 self?.titlesCollectionContainerView.titles = titles
             }
         }
+        
+        self.viewModel?.onShowFunnyAlert = { [weak self] isNeeded in
+            guard isNeeded else { return }
+            self?.wowwowEasy(#imageLiteral(resourceName: "choice"), title: "Собери мемас", message: "Картинка + выражение.\nНе спрашивай. Так надо!") {}
+        }
+        
+        self.viewModel?.onShowSendButtonLoader = { [weak self] show in
+            if show {
+                self?.sendButtonLoader.startAnimating()
+            } else {
+                self?.sendButtonLoader.stopAnimating()
+            }
+        }
+        
+        self.viewModel?.onMemBuildUpdate = { [weak self] mem in
+            switch mem {
+            case .title(let text):
+                self?.buildTitle.text = text
+            case .url(let url):
+                self?.buildMem.kf.setImage(with: url)
+            }
+        }
+        
+        self.viewModel?.onShowSendButton = { [weak self] show in
+            guard show else { return }
+            UIView.animate(withDuration: 0.3, delay: 0.3, options: .transitionFlipFromBottom, animations: {
+                self?.bottomPlace.constant = 0
+                self?.view.layoutIfNeeded()
+            }, completion: nil)
+        }
     }
     
-    private func showSendButtonIfNeeded() {
-        guard self.mem.picId != nil, self.mem.titleId != nil else { return }
-        UIView.animate(withDuration: 0.3, delay: 0.3, options: .transitionFlipFromBottom, animations: {
-            self.bottomPlace.constant = 0
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+    private func clear() {
+        self.buildTitle.text = ""
+        self.buildMem.image = nil
+    }
+    
+    @IBAction func reloadContent(_ sender: Any) {
+        self.viewModel?.reloadContent()
     }
     
     @IBAction private func sendMemAction(_ sender: UIButton) {
-        self.viewModel?.sendMem(mem)
+        self.viewModel?.sendMem()
     }
     
     func createUI() {
@@ -85,7 +119,6 @@ final class BuildMemViewController: UIViewController {
         self.buildTitle.layer.cornerRadius = 5
         self.buildTitle.clipsToBounds = true
         self.buildTitle.textAlignment = .center
-        self.buildTitle.isHidden = true
         
         self.buildMem.layer.shadowColor = UIColor.black.cgColor
         buildMem.layer.shadowOpacity = 1
@@ -96,17 +129,12 @@ final class BuildMemViewController: UIViewController {
 
 extension BuildMemViewController: TitlesCollectionContainerViewDelegate {
     func titleDidSelect(_ titleId: Int, _ text: String) {
-        self.mem.titleId = titleId
-        self.buildTitle.text = text
-        self.buildTitle.isHidden = false
-        self.showSendButtonIfNeeded()
+        self.viewModel?.selectionDidTap(.title(id: titleId, text: text))
     }
 }
 
 extension BuildMemViewController: PicsCollectionContainerViewDelegate {
     func picsCellDidSelect(_ picId: Int, _ imageUrl: URL) {
-        self.mem.picId = picId
-        self.buildMem.kf.setImage(with: imageUrl)
-        self.showSendButtonIfNeeded()
+        self.viewModel?.selectionDidTap(.mem(id: picId, url: imageUrl))
     }
 }

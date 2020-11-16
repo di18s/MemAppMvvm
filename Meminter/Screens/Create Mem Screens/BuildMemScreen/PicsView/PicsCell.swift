@@ -8,7 +8,5 @@
 import UIKit
 
 final class PicsCell: UICollectionViewCell {
-    static let identifier = String(describing: self)
-    
     @IBOutlet var imageView: UIImageView!
 }

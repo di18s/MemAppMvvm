@@ -22,10 +22,22 @@ final class TitlesCollectionContainerView: UIView {
     }
 }
 
-extension TitlesCollectionContainerView: UICollectionViewDelegate {
+extension TitlesCollectionContainerView: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let title = self.titles[safe: indexPath.item] else { return }
         self.delegate?.titleDidSelect(title.titleId, title.titleName)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.bounds.width / 3 - 20 / 3, height: 72)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     }
 }
 

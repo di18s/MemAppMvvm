@@ -7,9 +7,14 @@
 
 import Foundation
 
-struct Mem {
+struct MemSendInfo {
     var titleId: Int?
     var picId: Int?
+}
+
+enum MemViewInfo {
+    case title(_ text: String)
+    case url(_ url: URL)
 }
 
 enum ReloadType {
@@ -17,20 +22,38 @@ enum ReloadType {
     case pics(_ pics: [MemImageModel])
 }
 
-protocol BuildMemViewModelInput: class {
-    var userDefaultsProvider: UserDefaultsProviderInput { get }
+enum SelectionType {
+    case mem(id: Int, url: URL)
+    case title(id: Int, text: String)
+}
+
+protocol BuildMemViewModelInput: class {    
     var onError: ((String?) -> Void)? { get set }
     var onReloadData: ((ReloadType) -> Void)? { get set }
+    var onShowFunnyAlert: ((Bool) -> Void)? { get set }
+    var onShowSendButtonLoader: ((Bool) -> Void)? { get set }
+    var onMemBuildUpdate: ((MemViewInfo) -> Void)? { get set }
+    var onShowSendButton: ((Bool) -> Void)? { get set }
+    
     var memTitleArray: [MemTitleModel] { get set }
     var memImageArray: [MemImageModel] { get set }
-    func sendMem(_ mem: Mem)
+    
+    func didAppear()
+    func sendMem()
     func getMemPics(select: Int, count: Int)
     func getMemTitles(select: Int, count: Int)
+    func selectionDidTap(_ type: SelectionType)
+    func clear()
+    func reloadContent()
 }
 
 final class BuildMemViewModel: BuildMemViewModelInput {
     private let networkService: NetworkServiceInput
-    let userDefaultsProvider: UserDefaultsProviderInput
+    private let userDefaultsProvider: UserDefaultsProviderInput
+    
+    private var memIsSent = false
+    private var memSendInfo = MemSendInfo(titleId: nil, picId: nil)
+        
     var memTitleArray = [MemTitleModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -47,18 +70,45 @@ final class BuildMemViewModel: BuildMemViewModelInput {
     }
     var onReloadData: ((ReloadType) -> Void)?
     var onError: ((String?) -> Void)?
+    var onShowFunnyAlert: ((Bool) -> Void)?
+    var onShowSendButtonLoader: ((Bool) -> Void)?
+    var onMemBuildUpdate: ((MemViewInfo) -> Void)?
+    var onShowSendButton: ((Bool) -> Void)?
     
     init(networkService: NetworkServiceInput, userDefaultsProvider: UserDefaultsProviderInput) {
         self.networkService = networkService
         self.userDefaultsProvider = userDefaultsProvider
     }
     
+    func didAppear() {
+        if self.userDefaultsProvider.checkFor(key: .isFirstAppear) == true {
+            self.userDefaultsProvider.saveValue(value: false, for: .isFirstAppear)
+        }
+    }
+    
+    func selectionDidTap(_ type: SelectionType) {
+        switch type {
+        case let .mem(id, url):
+            self.memSendInfo.picId = id
+            self.onMemBuildUpdate?(.url(url))
+        case let .title(id, text):
+            self.onMemBuildUpdate?(.title(text))
+            self.memSendInfo.titleId = id
+        }
+        self.showSendButtonIfNeeded()
+    }
+    
+    private func showSendButtonIfNeeded() {
+        guard self.memSendInfo.picId != nil, self.memSendInfo.titleId != nil else { return }
+        self.onShowSendButton?(true)
+    }
+    
     func getMemTitles(select: Int, count: Int) {
         self.networkService.get(.titles(select: select, count: count)) { [weak self] (titles: [MemTitleModel]?, error: String?) in
             if let error = error {
-                self?.onError?(error)
+                DispatchQueue.main.async { self?.onError?(error) }
             } else if let titles = titles {
-                self?.memTitleArray = titles
+                self?.memTitleArray = titles.filter({ $0.titleName != "" })
             }
         }
     }
@@ -66,17 +116,33 @@ final class BuildMemViewModel: BuildMemViewModelInput {
     func getMemPics(select: Int, count: Int) {
         self.networkService.get(.pics(select: select, count: count)) { [weak self] (pics: [MemImageModel]?, error: String?) in
             if let error = error {
-                self?.onError?(error)
+                DispatchQueue.main.async { self?.onError?(error) }
             } else if let pics = pics {
                 self?.memImageArray = pics
             }
         }
     }
     
-    func sendMem(_ mem: Mem) {
-        guard let titleId = mem.titleId, let picId = mem.picId else { return }
+    func reloadContent() {
+        self.getMemTitles(select: 12, count: 12)
+        self.getMemPics(select: 16, count: 16)
+    }
+    
+    func sendMem() {
+        guard self.memIsSent == false, let titleId = self.memSendInfo.titleId, let picId = self.memSendInfo.picId else { return }
+        self.onShowSendButtonLoader?(true)
+        self.memIsSent = true
         self.networkService.post(by: .mem(titleId: titleId, picId: picId)) { [weak self] error in
-            self?.onError?(error)
+            self?.memIsSent = false
+            DispatchQueue.main.async {
+                self?.onShowSendButtonLoader?(false)
+                self?.onError?(error)
+            }
         }
+    }
+    
+    func clear() {
+        self.memSendInfo.picId = nil
+        self.memSendInfo.titleId = nil
     }
 }

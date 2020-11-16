@@ -25,9 +25,15 @@ final class DrawViewController: UIViewController {
         }
         NotificationCenter.default.addObserver(forName: MenuView.MenuViewDrawingParamDidChangedNotification, object: nil, queue: nil, using: drawingParamsChangedNotification)
         
-        self.drawView.frame = UIScreen.main.bounds
         self.view.addSubview(self.drawView)
+        self.drawView.frame = self.view.bounds
         self.view.sendSubviewToBack(self.drawView)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.drawView.clear()
+        self.sendButton.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -70,7 +76,7 @@ final class DrawViewController: UIViewController {
     }
     
     @IBAction private func sendButtonAction(_ sender: UIButton) {
-        self.viewModel?.postImage(self.drawView.uiImage?.jpegData(compressionQuality: 1))
+        self.viewModel?.postImage(self.drawView.uiImage?.jpegData(compressionQuality: 0.5))
     }
     
     //MARK: - touches processing

@@ -19,18 +19,6 @@ enum CommonServicesAssembly {
             return userDefaultsProvider
         }
     }
-    
-    private static weak var catalogViewModelContainer: CatalogViewModelInput?
-    
-    static func catalogViewModel() -> CatalogViewModelInput {
-        if let catalogViewModel = self.catalogViewModelContainer {
-            return catalogViewModel
-        } else {
-            let catalogViewModel = CatalogViewModel(networkService: NetworkServicesAssembly.networkService())
-            self.catalogViewModelContainer = catalogViewModel
-            return catalogViewModel
-        }
-    }
 
     private static weak var urlRequestBuilderContainer: URLRequestBuilderType?
     

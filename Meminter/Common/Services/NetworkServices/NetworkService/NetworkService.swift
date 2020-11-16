@@ -25,6 +25,9 @@ final class NetworkService: NetworkServiceInput {
     
     func get<T: Codable>(_ method: APIMethod, completion: @escaping (T?, String?) -> Void) {
         self.urlSession.dataTask(with: method.url) { (data, response, error) in
+            if let response = response as? HTTPURLResponse {
+                print(response.url as Any, " - ", response.statusCode)
+            }
             if let error = error {
                 completion(nil, error.localizedDescription)
             } else if let data = data, let value = try? JSONDecoder().decode(T.self, from: data) {
@@ -39,6 +42,9 @@ final class NetworkService: NetworkServiceInput {
             return
         }
         self.urlSession.uploadTask(with: request, from: request.httpBody) { data, response, error in
+            if let response = response as? HTTPURLResponse {
+                print(response.url as Any, " - ", response.statusCode)
+            }
             completion(error?.localizedDescription)
         }.resume()
     }
@@ -48,7 +54,10 @@ final class NetworkService: NetworkServiceInput {
             completion("Error create request")
             return
         }
-        self.urlSession.dataTask(with: request) { (_, _, error) in
+        self.urlSession.dataTask(with: request) { (d, r, error) in
+            if let response = r as? HTTPURLResponse {
+                print(response.url as Any, " - ", response.statusCode)
+            }
             completion(error?.localizedDescription)
         }.resume()
     }

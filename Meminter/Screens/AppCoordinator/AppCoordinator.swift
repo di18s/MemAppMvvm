@@ -1,5 +1,5 @@
 //
-//  StartViewController.swift
+//  AppCoordinator.swift
 //  Meminter
 //
 //  Created by Холмогоров Дмитрий on 05.11.2020.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class StartViewController: UIViewController, LoadableViewInput {
+final class AppCoordinator: UIViewController, LoadableViewInput {
     var activityIndicator: UIActivityIndicatorView!
     private let userDefaultsProvider: UserDefaultsProviderInput
     
@@ -28,10 +28,10 @@ final class StartViewController: UIViewController, LoadableViewInput {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.checkStart()
+        self.startFlow()
     }
     
-    func checkStart() {
+    func startFlow() {
         if self.userDefaultsProvider.checkFor(key: .firstStart) != true {
             self.userDefaultsProvider.saveValue(value: true, for: .firstStart)
             let introVC = IntroContainerViewController()

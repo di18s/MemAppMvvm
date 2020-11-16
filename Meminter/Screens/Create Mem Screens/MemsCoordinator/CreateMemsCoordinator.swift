@@ -20,8 +20,9 @@ private enum MemControllersId: String {
     case buildMem = "choiceVC"
 }
 
-final class CreateMemsNavigationController: UINavigationController {
+final class CreateMemsCoordinator: UINavigationController {
     private let storyBoardName = "CreateMems"
+    private var rootVC: UIViewController!
     var onEndCreateMemsFlow: (() -> Void)?
     
     init() {
@@ -36,7 +37,8 @@ final class CreateMemsNavigationController: UINavigationController {
     }
     
     func start() {
-        self.setViewControllers([self.buildMemFlow()!], animated: true)
+        self.rootVC = self.buildMemFlow()
+        self.pushViewController(self.rootVC, animated: false)
     }
     
     func drawMemFlow() -> DrawViewController? {
@@ -72,15 +74,16 @@ final class CreateMemsNavigationController: UINavigationController {
             switch flow {
             case .draw:
                 guard let drawVC = self.drawMemFlow() else { return }
-                self.setViewControllers([drawVC], animated: true)
+                self.pushViewController(drawVC, animated: true)
             case .writeText:
                 guard let writeVC = self.writeMemTextFlow() else { return }
-                self.setViewControllers([writeVC], animated: true)
+                self.pushViewController(writeVC, animated: true)
             case .buldMem:
                 guard let buldMemVC = self.buildMemFlow() else { return }
-                self.setViewControllers([buldMemVC], animated: true)
+                self.pushViewController(buldMemVC, animated: true)
             case .endCreateMemsFlow:
                 self.onEndCreateMemsFlow?()
+                self.setViewControllers([self.rootVC], animated: true)
             }
         }
     }

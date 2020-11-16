@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum MemRating: String {
+    case like, dislike
+}
+
 enum APIMethod {
     case mems(offset: Int, count: Int, desc: Bool)
     case pic
@@ -14,6 +18,7 @@ enum APIMethod {
     case mem(titleId: Int, picId: Int)
     case pics(select: Int, count: Int)
     case titles(select: Int, count: Int)
+    case rating(_ rating: MemRating, id: Int)
 }
 
 extension APIMethod {
@@ -24,13 +29,15 @@ extension APIMethod {
         case .pic:
             return .makeEndpoint("/pic")
         case .title(let title):
-            return .makeEndpoint(path: "title", params: ["title": title])
+            return .makeEndpoint(path: "/title", params: ["title": title])
         case let .mem(titleId, picId):
             return .makeEndpoint("/mem?titleId=\(titleId)&picId=\(picId)")
         case let .pics(select, count):
             return .makeEndpoint("/pic/rand?select=\(select)&count=\(count)")
         case let .titles(select, count):
             return .makeEndpoint("/title/rand?select=\(select)&count=\(count)")
+        case let .rating(rating, id):
+            return .makeEndpoint("/mem/\(rating.rawValue)/\(id)")
         }
     }
 }

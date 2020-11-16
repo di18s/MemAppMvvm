@@ -14,7 +14,7 @@ extension UIView {
                        delay: 0,
                        usingSpringWithDamping: CGFloat(0.10),
                        initialSpringVelocity: CGFloat(3.0),
-                       options: UIView.AnimationOptions.allowUserInteraction,
+                       options: .allowUserInteraction,
                        animations: {
                         animatedElement.transform = CGAffineTransform.identity
         })
@@ -26,7 +26,7 @@ extension UIView {
                        delay: 1.0,
                        usingSpringWithDamping: CGFloat(0.10),
                        initialSpringVelocity: CGFloat(2.0),
-                       options: UIView.AnimationOptions.allowUserInteraction,
+                       options: .allowUserInteraction,
                        animations: {
                         animatedElement.transform = CGAffineTransform.identity
         })

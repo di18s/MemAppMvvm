@@ -8,9 +8,5 @@
 import UIKit
 
 final class TitlesCell: UICollectionViewCell {
-    static let identifier = String(describing: self)
-    
-    @IBOutlet var titleLabel: UILabel!
-    
-    
+    @IBOutlet var titleLabel: UILabel! 
 }
