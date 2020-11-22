@@ -37,7 +37,7 @@ final class AppCoordinator: UIViewController, LoadableViewInput {
             let introVC = IntroContainerViewController()
             self.present(introVC, animated: true, completion: nil)
         } else {
-            self.present(TabbarController(), animated: true, completion: nil)
+            self.present(TabbarController(viewModel: TabbarViewModel()), animated: true, completion: nil)
         }
     }
     

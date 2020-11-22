@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-final class SwipeReviewViewCell: SwipeViewCell {
+final class SwipeMemReviewViewCell: SwipeViewCell {
     private let imgv = UIImageView()
     private let title = UILabel()
 

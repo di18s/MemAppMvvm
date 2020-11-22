@@ -66,8 +66,7 @@ final class BuildMemViewController: UIViewController {
             }
         }
         
-        self.viewModel?.onShowFunnyAlert = { [weak self] isNeeded in
-            guard isNeeded else { return }
+        self.viewModel?.onShowFunnyAlert = { [weak self] in
             self?.wowwowEasy(#imageLiteral(resourceName: "choice"), title: "Собери мемас", message: "Картинка + выражение.\nНе спрашивай. Так надо!") {}
         }
         

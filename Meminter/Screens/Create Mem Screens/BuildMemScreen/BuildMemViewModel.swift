@@ -30,7 +30,7 @@ enum SelectionType {
 protocol BuildMemViewModelInput: class {    
     var onError: ((String?) -> Void)? { get set }
     var onReloadData: ((ReloadType) -> Void)? { get set }
-    var onShowFunnyAlert: ((Bool) -> Void)? { get set }
+    var onShowFunnyAlert: (() -> Void)? { get set }
     var onShowSendButtonLoader: ((Bool) -> Void)? { get set }
     var onMemBuildUpdate: ((MemViewInfo) -> Void)? { get set }
     var onShowSendButton: ((Bool) -> Void)? { get set }
@@ -70,7 +70,7 @@ final class BuildMemViewModel: BuildMemViewModelInput {
     }
     var onReloadData: ((ReloadType) -> Void)?
     var onError: ((String?) -> Void)?
-    var onShowFunnyAlert: ((Bool) -> Void)?
+    var onShowFunnyAlert: (() -> Void)?
     var onShowSendButtonLoader: ((Bool) -> Void)?
     var onMemBuildUpdate: ((MemViewInfo) -> Void)?
     var onShowSendButton: ((Bool) -> Void)?
@@ -83,6 +83,7 @@ final class BuildMemViewModel: BuildMemViewModelInput {
     func didAppear() {
         if self.userDefaultsProvider.checkFor(key: .isFirstAppear) == true {
             self.userDefaultsProvider.saveValue(value: false, for: .isFirstAppear)
+            self.onShowFunnyAlert?()
         }
     }
     

@@ -20,7 +20,7 @@ private enum MemControllersId: String {
     case buildMem = "choiceVC"
 }
 
-final class CreateMemsCoordinator: UINavigationController {
+final class MemsCreatorCoordinator: UINavigationController {
     private let storyBoardName = "CreateMems"
     private var rootVC: UIViewController!
     var onEndCreateMemsFlow: (() -> Void)?

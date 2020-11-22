@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class SwipeReviewViewController: UIViewController {
+final class SwipeMemReviewViewController: UIViewController {
     private let viewModel: SwipeReviewViewModelInput
     private let collection = SwipeCollectionView()
     private let stubLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 40))
@@ -44,7 +44,7 @@ final class SwipeReviewViewController: UIViewController {
             collection.widthAnchor.constraint(equalToConstant: 200),
             collection.heightAnchor.constraint(equalToConstant: 400)
         ])
-        collection.register(type: SwipeReviewViewCell.self)
+        collection.register(type: SwipeMemReviewViewCell.self)
     }
     
     private func subscribeOnViewModelUpdates() {
@@ -68,13 +68,13 @@ final class SwipeReviewViewController: UIViewController {
     }
 }
 
-extension SwipeReviewViewController: SwipeCollectionViewDataSource {
+extension SwipeMemReviewViewController: SwipeCollectionViewDataSource {
     func swipeViewCellCount() -> Int {
         return self.viewModel.mems.count
     }
     
     func swipeViewCellConfigure(_ swipeCollectionView: SwipeCollectionView, index: Int) -> SwipeViewCell {
-        guard let cell = swipeCollectionView.makeCell() as? SwipeReviewViewCell else { fatalError("Wrong SwipeReviewViewCell class") }
+        guard let cell = swipeCollectionView.makeCell() as? SwipeMemReviewViewCell else { fatalError("Wrong SwipeReviewViewCell class") }
         if let mem = self.viewModel.mems[safe: index] {
             cell.congigure(mem: mem)
         }
@@ -82,7 +82,7 @@ extension SwipeReviewViewController: SwipeCollectionViewDataSource {
     }
 }
 
-extension SwipeReviewViewController: SwipeCollectionViewDelegate {
+extension SwipeMemReviewViewController: SwipeCollectionViewDelegate {
     func didSwipe(direction: SwipeViewSwipeDirection, index: Int) {
 //        print(index, direction)
         self.viewModel.setRating(direction, id: index)

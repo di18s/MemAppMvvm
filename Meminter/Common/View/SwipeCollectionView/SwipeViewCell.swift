@@ -26,12 +26,12 @@ class SwipeViewCell: UIView {
     
     private func setupView() {
         self.backgroundColor = .white
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.draggingV(_:)))
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.draggingView(_:)))
         self.isUserInteractionEnabled = true
         self.addGestureRecognizer(panRecognizer)
     }
     
-    @objc private func draggingV(_ recognizer: UIPanGestureRecognizer) {
+    @objc private func draggingView(_ recognizer: UIPanGestureRecognizer) {
         guard let superview = superview else { return }
         switch recognizer.state {
         case .changed:
@@ -49,7 +49,7 @@ class SwipeViewCell: UIView {
                 }
             } else if self.center.x <= (superview.bounds.width * 0.35) {
                 self.onSwipeAction?(.left, self.tag)
-                UIView.animate(withDuration: 0.1) {
+                UIView.animate(withDuration: 0.2) {
                     self.center.x = superview.frame.origin.x - self.bounds.width
                     self.layoutIfNeeded()
                 } completion: { _ in

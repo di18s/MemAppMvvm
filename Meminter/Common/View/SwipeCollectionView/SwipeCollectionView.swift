@@ -34,6 +34,11 @@ class SwipeCollectionView: UIView {
     private var registerType = SwipeViewCell.self
     private var createdCells = 0
     
+    func register(type: SwipeViewCell.Type) {
+        self.registerType = type
+    }
+    
+    // TODO: сделать переиспользование
     func makeCell() -> SwipeViewCell {
         let cell = registerType.init()
         self.setupSwipeViewCell(cell)
@@ -46,38 +51,32 @@ class SwipeCollectionView: UIView {
             dataSource.swipeViewCellContainerIsEmpty()
             return
         }
-        self.makeCell(dataSource)
+        self.createCell(dataSource)
     }
     
-    private func makeCell(_ dataSource: SwipeCollectionViewDataSource) {
+    private func createCell(_ dataSource: SwipeCollectionViewDataSource) {
         if self.createdCells < 3 {
             let count = dataSource.swipeViewCellCount()
             for _ in self.createdCells..<min(3, count) {
-                let cell = dataSource.swipeViewCellConfigure(self, index: self.createdCells)
-                cell.tag = self.createdCells
-                self.createdCells += 1
-                cell.onSwipeAction = { [weak self] direction, index in
-                    self?.delegate?.didSwipe(direction: direction, index: index)
-                    self?.makeCell(dataSource)
-                }
+                self.setupCellProperty(dataSource)
             }
         } else {
             if self.createdCells < dataSource.swipeViewCellCount() {
-                let cell = dataSource.swipeViewCellConfigure(self, index: self.createdCells)
-                cell.tag = self.createdCells
-                self.createdCells += 1
-                cell.onSwipeAction = { [weak self] direction, index in
-                    self?.delegate?.didSwipe(direction: direction, index: index)
-                    self?.makeCell(dataSource)
-                }
+                self.setupCellProperty(dataSource)
             } else {
                 self.delegate?.didOutOfCells()
             }
         }
     }
     
-    func register(type: SwipeViewCell.Type) {
-        self.registerType = type
+    private func setupCellProperty(_ dataSource: SwipeCollectionViewDataSource) {
+        let cell = dataSource.swipeViewCellConfigure(self, index: self.createdCells)
+        cell.tag = self.createdCells
+        self.createdCells += 1
+        cell.onSwipeAction = { [weak self] direction, index in
+            self?.delegate?.didSwipe(direction: direction, index: index)
+            self?.createCell(dataSource)
+        }
     }
     
     private func setupSwipeViewCell(_ cell: SwipeViewCell) {

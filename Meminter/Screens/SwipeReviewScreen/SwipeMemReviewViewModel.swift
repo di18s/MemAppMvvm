@@ -15,7 +15,7 @@ protocol SwipeReviewViewModelInput: class {
     func setRating(_ direction: SwipeViewSwipeDirection, id: Int)
 }
 
-final class SwipeReviewViewModel: SwipeReviewViewModelInput {
+final class SwipeMemReviewViewModel: SwipeReviewViewModelInput {
     private let networkService: NetworkServiceInput
     var mems: [MemModel] = []
     var onError: ((String?) -> Void)?
