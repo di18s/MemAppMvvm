@@ -31,8 +31,8 @@ final class BuildMemViewController: UIViewController {
         self.picsCollectionContainerView.delegate = self
         self.titlesCollectionContainerView.delegate = self
         self.subscribeOnBuildMemUpdate()
-        self.viewModel?.getMemPics(select: 12, count: 12)
-        self.viewModel?.getMemTitles(select: 12, count: 12)
+        self.viewModel?.getMemPics(select: 25, count: 25)
+        self.viewModel?.getMemTitles(select: 25, count: 25)
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -125,8 +125,8 @@ final class BuildMemViewModel: BuildMemViewModelInput {
     }
     
     func reloadContent() {
-        self.getMemTitles(select: 12, count: 12)
-        self.getMemPics(select: 16, count: 16)
+        self.getMemTitles(select: 25, count: 25)
+        self.getMemPics(select: 25, count: 25)
     }
     
     func sendMem() {

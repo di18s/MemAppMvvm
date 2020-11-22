@@ -37,7 +37,7 @@ final class MemsCreatorCoordinator: UINavigationController {
     }
     
     func start() {
-        self.rootVC = self.buildMemFlow()
+        self.rootVC = self.drawMemFlow()
         self.pushViewController(self.rootVC, animated: false)
     }
     
