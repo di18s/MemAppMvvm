@@ -55,10 +55,8 @@ final class SwipeMemReviewViewModel: SwipeReviewViewModelInput {
     func setRating(_ direction: SwipeViewSwipeDirection, id: Int) {
         self.prefetchData(id)
         let id = self.mems.value?[id].id ?? 0
-        // TODO: fix memmodel type
-        let publisher: AnyPublisher<String, Error> = self.swipeReviewService.setRating(.rating(self.makeMemRating(direction), id: id))
 
-        self.reviewRequest = publisher
+        self.reviewRequest = self.swipeReviewService.setRating(.rating(self.makeMemRating(direction), id: id))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] complValue in
                 switch complValue {
@@ -71,7 +69,8 @@ final class SwipeMemReviewViewModel: SwipeReviewViewModelInput {
                     })
                 }
             }, receiveValue: { v in
-                print(v)
+                // TODO: add handler
+                print(String(data: v, encoding: .utf8) as Any)
             })
     }
 
