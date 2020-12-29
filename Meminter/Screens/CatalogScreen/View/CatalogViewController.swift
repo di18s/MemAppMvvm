@@ -1,7 +1,9 @@
 import UIKit
+import Combine
 
 final class CatalogViewController: UIViewController, LoadableViewInput {
     private var catalogViewModel: CatalogViewModelInput
+	private var subscriptions: Set<AnyCancellable> = []
     
     var activityIndicator: UIActivityIndicatorView!
     private var collectionView: UICollectionView!
@@ -33,26 +35,34 @@ final class CatalogViewController: UIViewController, LoadableViewInput {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.catalogViewModel.getCatalog(25, desc: true, as: .new)
+		self.catalogViewModel.getCatalog(25, desc: true, as: .new)
     }
     
     @objc private func refresh(_ sender: UIRefreshControl) {
         self.refreshControl.beginRefreshing()
-        self.catalogViewModel.getCatalog(25, desc: true, as: .new)
+		self.catalogViewModel.getCatalog(25, desc: true, as: .new)
     }
 
     private func subscrideOnCatalogUpdate() {
-        self.catalogViewModel.onError = { [weak self] error in
-            self?.setLoading(false)
-            if let error = error {
-                self?.showError(title: "Error", message: error)
-            }
-            self?.refreshControl.endRefreshing()
-        }
-        self.catalogViewModel.onReloadData = { [weak self] in
-            self?.setLoading(false)
-            self?.collectionView.reloadData()
-        }
+		self.catalogViewModel.currentError
+			.sink { [weak self] error in
+				guard let strongSelf = self else { return }
+				strongSelf.setLoading(false)
+				guard let error = error?.error else { return }
+				strongSelf.showError(title: "Error", message: error)
+				strongSelf.refreshControl.endRefreshing()
+			}
+			.store(in: &self.subscriptions)
+		
+		self.catalogViewModel.memCatalogSubject
+			.sink { [weak self] memcatalog in
+				guard let strongSelf = self else { return }
+				strongSelf.setLoading(false)
+				guard memcatalog != nil else { return }
+				strongSelf.collectionView.reloadData()
+				strongSelf.refreshControl.endRefreshing()
+			}
+			.store(in: &self.subscriptions)
     }
     
     private func setUpCollection() {
@@ -79,9 +89,10 @@ final class CatalogViewController: UIViewController, LoadableViewInput {
 
 extension CatalogViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if self.collectionView.indexPathsForVisibleItems.contains(IndexPath(item: self.catalogViewModel.memCatalog.count - 1, section: 0)) {
+		guard let count = self.catalogViewModel.memCatalogSubject.value?.count, count > 0 else { return }
+        if self.collectionView.indexPathsForVisibleItems.contains(IndexPath(item: count - 1, section: 0)) {
             self.setLoading(true)
-            self.catalogViewModel.getCatalog(25, desc: true, as: .addition)
+			self.catalogViewModel.getCatalog(25, desc: true, as: .addition)
         }
     }
 }
@@ -89,22 +100,17 @@ extension CatalogViewController {
 extension CatalogViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.catalogViewModel.memCatalog.count
+		return self.catalogViewModel.memCatalogSubject.value?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CatalogCollectionViewCell.cellIdentifier, for: indexPath) as? CatalogCollectionViewCell else { fatalError("Wrong cell class") }
-        if let catalog = self.catalogViewModel.memCatalog[safe: indexPath.item] {
+        if let catalog = self.catalogViewModel.memCatalogSubject.value?[safe: indexPath.item] {
             cell.configure(catalog)
         }
         return cell
     }
-    
-    // TODO:
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-    }
-    
+	
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.view.bounds.width / 2 - 7.5, height: (self.view.bounds.width / 2 - 7.5) / 9 * 16 )
     }

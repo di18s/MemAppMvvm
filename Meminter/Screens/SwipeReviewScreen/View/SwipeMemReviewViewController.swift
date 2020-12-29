@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import Combine
 
 final class SwipeMemReviewViewController: UIViewController {
+	private var subscriptions: Set<AnyCancellable> = []
     private let viewModel: SwipeReviewViewModelInput
     private let collection = SwipeCollectionView()
     private let stubLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 40))
@@ -48,14 +50,19 @@ final class SwipeMemReviewViewController: UIViewController {
     }
     
     private func subscribeOnViewModelUpdates() {
-        self.viewModel.onError = { [weak self] error in
-            guard let error = error else { return }
-            self?.showError(title: "Error", message: error)
-        }
-        
-        self.viewModel.onReloadData = { [weak self] in
-            self?.collection.reloadData()
-        }
+		self.viewModel.currentError
+			.sink { [weak self] error in
+				guard let error = error?.error else { return }
+				self?.showError(title: "Error", message: error)
+			}
+			.store(in: &self.subscriptions)
+
+		self.viewModel.mems
+			.sink { [weak self] mems in
+				guard mems != nil else { return }
+				self?.collection.reloadData()
+			}
+			.store(in: &self.subscriptions)
     }
     
     private func setupUI() {
@@ -70,13 +77,13 @@ final class SwipeMemReviewViewController: UIViewController {
 
 extension SwipeMemReviewViewController: SwipeCollectionViewDataSource {
     func swipeViewCellCount() -> Int {
-        return self.viewModel.mems.count
+		return self.viewModel.mems.value?.count ?? 0
     }
     
     func swipeViewCellConfigure(_ swipeCollectionView: SwipeCollectionView, index: Int) -> SwipeViewCell {
         guard let cell = swipeCollectionView.makeCell() as? SwipeMemReviewViewCell else { fatalError("Wrong SwipeReviewViewCell class") }
-        if let mem = self.viewModel.mems[safe: index] {
-            cell.congigure(mem: mem)
+		if let mem = self.viewModel.mems.value?[safe: index] {
+            cell.configure(mem: mem)
         }
         return cell
     }

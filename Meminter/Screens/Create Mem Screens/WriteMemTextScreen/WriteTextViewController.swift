@@ -1,15 +1,17 @@
 import UIKit
+import Combine
 
 final class WriteTextViewController: UIViewController {
+	var viewModel: WriteTextViewModelInput?
+	var onEndThisFlow: (() -> Void)?
+
     @IBOutlet private weak var memsText: UITextView!
     @IBOutlet private weak var charCounter: UILabel!
     @IBOutlet private weak var clearText: UIButton!
     @IBOutlet private weak var sendButton: UIButton!
-    
-    var viewModel: WriteTextViewModelInput?
-    var onEndThisFlow: (() -> Void)?
 
-    
+	private var subscriptions: Set<AnyCancellable> = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,19 +50,25 @@ final class WriteTextViewController: UIViewController {
     }
     
     private func subscribeOnVMUpdates() {
-        self.viewModel?.onError = { [weak self] error in
-            if let error = error {
-                self?.showError(title: "Error", message: error)
-            } else {
-                self?.onEndThisFlow?()
+        self.viewModel?.memTextUpdateSubject
+            .sink { [weak self] textModel in
+                guard let model = textModel else { return }
+                self?.memsText.text = model.memText
+                self?.charCounter.text = model.charCounter
+                self?.sendButton.isHidden = model.sendButtonHidden
             }
-        }
-        
-        self.viewModel?.onMemTextUpdate = { [weak self] model in
-            self?.memsText.text = model.memText
-            self?.charCounter.text = model.charCounter
-            self?.sendButton.isHidden = model.sendButtonHidden
-        }
+            .store(in: &self.subscriptions)
+        self.viewModel?.currentError
+            .sink { [weak self] error in
+                guard let strongSelf = self else { return }
+                guard let error = error?.error else {
+                    guard !strongSelf.sendButton.isHidden else { return }
+                    strongSelf.onEndThisFlow?()
+                    return
+                }
+                strongSelf.showError(title: "Error", message: error)
+            }
+            .store(in: &self.subscriptions)
     }
 }
 

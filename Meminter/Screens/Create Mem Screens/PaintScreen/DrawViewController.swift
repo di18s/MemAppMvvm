@@ -17,12 +17,11 @@ final class DrawViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.viewModel?.onError = { [weak self] error in
-            if let error = error {
-                self?.showError(title: "Error", message: error)
-            } else {
-                self?.onEndThisFlow?()
-            }
+			self?.showError(title: "Error", message: error)
         }
+		self.viewModel?.onSuccess = { [weak self] in
+			self?.onEndThisFlow?()
+		}
         NotificationCenter.default.addObserver(forName: MenuView.MenuViewDrawingParamDidChangedNotification, object: nil, queue: nil, using: drawingParamsChangedNotification)
         
         self.view.addSubview(self.drawView)

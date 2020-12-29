@@ -22,7 +22,7 @@ final class SwipeMemReviewViewCell: SwipeViewCell {
         self.setupUI()
     }
     
-    func congigure(mem: MemModel) {
+    func configure(mem: MemModel) {
         self.imgv.kf.setImage(with: URL(string: URL.baseUrlString + mem.url))
         self.title.text = mem.title
     }

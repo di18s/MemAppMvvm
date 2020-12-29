@@ -8,8 +8,17 @@
 import UIKit
 
 final class AppCoordinator: UIViewController, LoadableViewInput {
+	private let userDefaultsProvider: UserDefaultsProviderInput
+
+	private lazy var introVC: IntroContainerViewController = {
+		return IntroContainerViewController()
+	}()
+
+	private lazy var tabbar: TabbarController = {
+		return TabbarController(controllersFactory: CommonServicesAssembly.tabbarControllersFactory())
+	}()
+
     var activityIndicator: UIActivityIndicatorView!
-    private let userDefaultsProvider: UserDefaultsProviderInput
     
     init(userDefaultsProvider: UserDefaultsProviderInput) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -33,14 +42,13 @@ final class AppCoordinator: UIViewController, LoadableViewInput {
     
     func startFlow() {
         if self.userDefaultsProvider.checkFor(key: .firstStart) != true {
-            self.userDefaultsProvider.saveValue(value: true, for: .firstStart)
-            let introVC = IntroContainerViewController()
-            self.present(introVC, animated: true, completion: nil)
+            self.userDefaultsProvider.save(value: true, for: .firstStart)
+			self.present(self.introVC, animated: true, completion: nil)
         } else {
-            self.present(TabbarController(viewModel: TabbarViewModel()), animated: true, completion: nil)
+			self.present(self.tabbar, animated: true, completion: nil)
         }
     }
-    
+
     private func setupUI() {
         self.view.backgroundColor = .black
         self.activityIndicator = UIActivityIndicatorView(style: .large)

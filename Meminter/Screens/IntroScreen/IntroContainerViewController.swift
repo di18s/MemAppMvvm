@@ -46,7 +46,6 @@ final class IntroContainerViewController: UIPageViewController, UIPageViewContro
         } else {
             self.dismiss(animated: true, completion: nil)
         }
-
     }
     
     private func updateButtonWithIndex(index: Int) {

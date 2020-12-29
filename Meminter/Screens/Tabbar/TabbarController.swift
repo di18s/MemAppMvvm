@@ -8,27 +8,40 @@
 import UIKit
 
 final class TabbarController: UITabBarController {
-    private var viewModel: TabbarViewModelInput
+	private var controllersFactory: TabbarControllersFactoryType
     
-    init(viewModel: TabbarViewModelInput) {
-        self.viewModel = viewModel
+    init(controllersFactory: TabbarControllersFactoryType) {
+		self.controllersFactory = controllersFactory
         
         super.init(nibName: nil, bundle: nil)
         
         self.modalPresentationStyle = .fullScreen
         self.tabBar.barTintColor = .white
         self.tabBar.tintColor = .black
+
+		self.setupViewControllers()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.viewControllers = self.viewModel.createViewControllers()
-        self.viewModel.onMemsCreationFlowEnded = { [weak self] controllerIndex in
-            self?.selectedIndex = controllerIndex
-        }
-    }
+
+	private func setupViewControllers() {
+		let catalogVC = self.controllersFactory.makeCatalogController()
+		let memsCreator = self.controllersFactory.makeMemsCreatorCoordinator()
+		let swipeMemsVC = self.controllersFactory.makeSwipeMemsController()
+
+		var controllers = [UIViewController]()
+
+		controllers.append(swipeMemsVC)
+		controllers.append(memsCreator)
+		controllers.append(catalogVC)
+
+		viewControllers = controllers
+
+		memsCreator.onEndCreateMemsFlow = { [weak self, weak catalogVC] in
+			guard let catalog = catalogVC else { return }
+			self?.selectedIndex = self?.viewControllers?.firstIndex(of: catalog) ?? 0
+		}
+	}
 }

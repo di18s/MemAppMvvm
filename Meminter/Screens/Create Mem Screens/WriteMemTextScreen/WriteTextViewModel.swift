@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 protocol WriteTextViewModelInput: class {
-    var onError: ((String?) -> Void)? { get set }
-    var onMemTextUpdate: ((WriteTextModel) -> Void)? { get set }
+	var currentError: CurrentValueSubject<(error: String, retryAction: () -> Void)?, Never> { get }
+	var memTextUpdateSubject: CurrentValueSubject<WriteTextModel?, Never> { get }
+
     func sendText(_ text: String)
     func clearText()
     func textBeginEditing()
@@ -17,24 +19,37 @@ protocol WriteTextViewModelInput: class {
 }
 
 final class WriteTextViewModel: WriteTextViewModelInput {
-    private let networkService: NetworkServiceInput
+	var onError: ((String?) -> Void)?
+	var memTextUpdateSubject: CurrentValueSubject<WriteTextModel?, Never> = CurrentValueSubject(nil)
+	var currentError: CurrentValueSubject<(error: String, retryAction: () -> Void)?, Never> = CurrentValueSubject(nil)
+
+    private let networkService: WriteTextServiceInput
     private var isFirstClearText = true
-    var onError: ((String?) -> Void)?
-    var onMemTextUpdate: ((WriteTextModel) -> Void)?
+	private var currentRequest: AnyCancellable?
     
-    init(networkService: NetworkServiceInput) {
+    init(networkService: WriteTextServiceInput) {
         self.networkService = networkService
     }
     
     func sendText(_ text: String) {
-        self.networkService.post(by: .title(title: text)) { [weak self] error in
-            self?.onError?(error)
-        }
+		currentRequest = self.networkService.sendText(.title(title: text))
+			.receive(on: DispatchQueue.main)
+			.sink(receiveCompletion: { [weak self] complValue in
+				switch complValue {
+				case .failure(let e):
+					self?.currentRequest = nil
+					self?.currentError.value = (e.localizedDescription, { [weak self] in
+						self?.sendText(text)
+					})
+				case .finished:
+					self?.currentError.value = nil
+				}
+			}, receiveValue: { _ in })
     }
     
     func clearText() {
         let writeModel = WriteTextModel(sendButtonHidden: true, charCounter: "0 / 50", memText: "")
-        self.onMemTextUpdate?(writeModel)
+		self.memTextUpdateSubject.send(writeModel)
     }
     
     func textBeginEditing() {
@@ -48,7 +63,6 @@ final class WriteTextViewModel: WriteTextViewModelInput {
         let sendButtonHidden = text.count < 3
         
         let writeModel = WriteTextModel(sendButtonHidden: sendButtonHidden, charCounter: charCounterText, memText: text)
-        
-        self.onMemTextUpdate?(writeModel)
+		self.memTextUpdateSubject.send(writeModel)
     }
 }

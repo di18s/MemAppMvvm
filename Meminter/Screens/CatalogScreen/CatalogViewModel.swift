@@ -6,52 +6,59 @@
 //
 
 import Foundation
+import Combine
 
 enum OptionsAdditing {
     case addition, new
 }
 
 protocol CatalogViewModelInput: class {
-    var onError: ((String?) -> Void)? { get set }
-    var onReloadData: (() -> Void)? { get set }
-    var memCatalog: [MemModel] { get set }
+    var memCatalogSubject: CurrentValueSubject<[MemModel]?, Never> { get }
+    var currentError: CurrentValueSubject<(error: String, retryAction: () -> Void)?, Never> { get }
     func getCatalog(_ count: Int, desc: Bool, as option: OptionsAdditing)
 }
 
 final class CatalogViewModel: CatalogViewModelInput {
-    let networkService: NetworkServiceInput
-    var onError: ((String?) -> Void)?
-    var onReloadData: (() -> Void)?
-    var memCatalog = [MemModel]()
-    
+    let catalogService: CatalogServiceInput
+    let memCatalogSubject: CurrentValueSubject<[MemModel]?, Never> = CurrentValueSubject(nil)
+    let currentError: CurrentValueSubject<(error: String, retryAction: () -> Void)?, Never> = CurrentValueSubject(nil)
+
+    private var currentRequest: AnyCancellable?
     private var isLoading = false
     
-    init(networkService: NetworkServiceInput) {
-        self.networkService = networkService
+    init(catalogService: CatalogServiceInput) {
+        self.catalogService = catalogService
     }
-    
+
     func getCatalog(_ count: Int, desc: Bool, as option: OptionsAdditing) {
         guard self.isLoading == false else { return }
+
         self.isLoading = true
-        let offset = option == .new ? 0 : self.memCatalog.count
-        self.networkService.get(.mems(offset: offset, count: count, desc: desc)) { [weak self] (mems: [MemModel]?, error: String?) in
-            self?.isLoading = false
-            
-            if let mems = mems, mems.isEmpty == false {
+        self.currentRequest = nil
+        let offset = option == .new ? 0 : self.memCatalogSubject.value?.count ?? 0
+
+        let publisher: AnyPublisher<[MemModel], Error> = self.catalogService.catalog(.mems(offset: offset, count: count, desc: desc))
+
+        self.currentRequest = publisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] error in
+                switch error {
+                case .failure(let e):
+                    self?.currentRequest = nil
+                    self?.currentError.value = (e.localizedDescription, { [weak self] in
+                        self?.getCatalog(count, desc: desc, as: option)
+                    })
+                case .finished:
+                    self?.currentError.value = nil
+                }
+                self?.isLoading = false
+            }, receiveValue: { [weak self] value in
                 switch option {
-                case .new:
-                    self?.memCatalog = mems
                 case .addition:
-                    self?.memCatalog.append(contentsOf: mems)
+                    self?.memCatalogSubject.value?.append(contentsOf: value)
+                case .new:
+                    self?.memCatalogSubject.send(value)
                 }
-                DispatchQueue.main.async {
-//                    print(self?.memCatalog.count)
-                    self?.onReloadData?()
-                }
-            }
-            DispatchQueue.main.async {
-                self?.onError?(error)
-            }
-        }
+            })
     }
 }

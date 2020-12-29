@@ -9,7 +9,7 @@ import Foundation
 
 protocol UserDefaultsProviderInput: AnyObject {
     func checkFor(key: UserDefaultsKeys) -> Bool
-    func saveValue(value: Bool, for key: UserDefaultsKeys)
+    func save(value: Bool, for key: UserDefaultsKeys)
 }
 
 final class UserDefaultsProvider: UserDefaultsProviderInput {
@@ -17,7 +17,7 @@ final class UserDefaultsProvider: UserDefaultsProviderInput {
         return UserDefaults.standard.bool(forKey: key.rawValue)
     }
     
-    func saveValue(value: Bool, for key: UserDefaultsKeys) {
+    func save(value: Bool, for key: UserDefaultsKeys) {
         UserDefaults.standard.set(value, forKey: key.rawValue)
     }
 }

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0A018EFA255C5E1D009585DF /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A018EF9255C5E1D009585DF /* Collection+Extension.swift */; };
-		0A5A9DFC256AA8DF004B66C8 /* TabbarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5A9DFB256AA8DF004B66C8 /* TabbarViewModel.swift */; };
 		0A7B535B25611C81008962E8 /* WriteTextModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7B535A25611C81008962E8 /* WriteTextModel.swift */; };
 		0AA2CCBF255DC54000F1B393 /* SwipeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA2CCBC255DC54000F1B393 /* SwipeViewCell.swift */; };
 		0AA2CCC0255DC54000F1B393 /* SwipeMemReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA2CCBD255DC54000F1B393 /* SwipeMemReviewViewController.swift */; };
@@ -22,6 +21,11 @@
 		0AB915A4255C5563000D1DD6 /* PicsCollectionContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB915A3255C5563000D1DD6 /* PicsCollectionContainerView.swift */; };
 		0AD0E843255C41ED00C33D52 /* BuildMemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD0E842255C41ED00C33D52 /* BuildMemViewModel.swift */; };
 		40FF5B23201F4D28DE68D20A /* Pods_Meminter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C0C67B52C32DF1EDEDE444D /* Pods_Meminter.framework */; };
+		F7066A51257104A700A011A7 /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066A50257104A700A011A7 /* ErrorType.swift */; };
+		F7066A572571098800A011A7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066A562571098800A011A7 /* Loggable.swift */; };
+		F7066A8D2574E15A00A011A7 /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066A8C2574E15A00A011A7 /* CatalogService.swift */; };
+		F7066A932574E8DE00A011A7 /* SwipeReviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066A922574E8DE00A011A7 /* SwipeReviewService.swift */; };
+		F7066AC225762B6900A011A7 /* BuildMemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066AC125762B6900A011A7 /* BuildMemService.swift */; };
 		F711427225540C2A00C3D4C4 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F711427125540C2A00C3D4C4 /* UIViewController+Extension.swift */; };
 		F72C908C25542BF6003D8B89 /* CreateMems.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F72C908B25542BF6003D8B89 /* CreateMems.storyboard */; };
 		F72C909525542C00003D8B89 /* DrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72C909025542C00003D8B89 /* DrawViewController.swift */; };
@@ -31,9 +35,12 @@
 		F72C909925542C00003D8B89 /* WriteTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72C909425542C00003D8B89 /* WriteTextViewController.swift */; };
 		F72C909C25542F6F003D8B89 /* DrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72C909B25542F6F003D8B89 /* DrawViewModel.swift */; };
 		F72C90A025543289003D8B89 /* URLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72C909F25543289003D8B89 /* URLRequestBuilder.swift */; };
+		F73D3C0F25909DD1008B8C36 /* WriteTextService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73D3C0E25909DD1008B8C36 /* WriteTextService.swift */; };
 		F757C6042554030000338DB2 /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F757C6032554030000338DB2 /* CatalogViewModel.swift */; };
 		F757C60E2554058C00338DB2 /* NetworkServicesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = F757C60D2554058C00338DB2 /* NetworkServicesAssembly.swift */; };
 		F76130262555260900C5CDB5 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76130252555260900C5CDB5 /* UIView+Extension.swift */; };
+		F78BAAB9259B451100DDC9D9 /* DrawMemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78BAAB8259B451100DDC9D9 /* DrawMemService.swift */; };
+		F78BAABD259B47D400DDC9D9 /* TabbarControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78BAABC259B47D400DDC9D9 /* TabbarControllerFactory.swift */; };
 		F79B42412553F5920099AF7B /* APIMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79B42402553F5920099AF7B /* APIMethod.swift */; };
 		F79B42462553F6510099AF7B /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79B42452553F6510099AF7B /* URL+Extension.swift */; };
 		F7B08C4825553965000BE757 /* MemsCreatorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B08C4725553965000BE757 /* MemsCreatorCoordinator.swift */; };
@@ -52,7 +59,7 @@
 		F7F3D5C72553C026007A5929 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5C62553C026007A5929 /* AppCoordinator.swift */; };
 		F7F3D5DB2553C154007A5929 /* IntroContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5CF2553C154007A5929 /* IntroContentViewController.swift */; };
 		F7F3D5DC2553C154007A5929 /* IntroContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5D02553C154007A5929 /* IntroContainerViewController.swift */; };
-		F7F3D5DD2553C154007A5929 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5D22553C154007A5929 /* NetworkService.swift */; };
+		F7F3D5DD2553C154007A5929 /* BaseNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5D22553C154007A5929 /* BaseNetworkService.swift */; };
 		F7F3D5E72553C1AB007A5929 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7F3D5E62553C1AB007A5929 /* Assets.xcassets */; };
 		F7F3D5EE2553C629007A5929 /* IntroContentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5ED2553C629007A5929 /* IntroContentModel.swift */; };
 		F7F3D5F72553CB73007A5929 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F3D5F62553CB73007A5929 /* UserDefaultsKeys.swift */; };
@@ -62,12 +69,11 @@
 
 /* Begin PBXFileReference section */
 		0A018EF9255C5E1D009585DF /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
-		0A5A9DFB256AA8DF004B66C8 /* TabbarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarViewModel.swift; sourceTree = "<group>"; };
 		0A7B535A25611C81008962E8 /* WriteTextModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTextModel.swift; sourceTree = "<group>"; };
 		0AA2CCBC255DC54000F1B393 /* SwipeViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeViewCell.swift; sourceTree = "<group>"; };
 		0AA2CCBD255DC54000F1B393 /* SwipeMemReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeMemReviewViewController.swift; sourceTree = "<group>"; };
 		0AA2CCBE255DC54000F1B393 /* SwipeCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeCollectionView.swift; sourceTree = "<group>"; };
-		0AA2CCC7255DC5D800F1B393 /* SwipeMemReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeMemReviewViewModel.swift; sourceTree = "<group>"; };
+		0AA2CCC7255DC5D800F1B393 /* SwipeMemReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeMemReviewViewModel.swift; sourceTree = "<group>"; usesTabs = 0; };
 		0AA2CCCA255DC7A500F1B393 /* SwipeMemReviewViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeMemReviewViewCell.swift; sourceTree = "<group>"; };
 		0AB22945255C6C9800129EC7 /* TabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
 		0AB91598255C54E1000D1DD6 /* TitlesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlesCell.swift; sourceTree = "<group>"; };
@@ -78,18 +84,26 @@
 		38A3A093506DD2265376E36E /* Pods-Meminter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Meminter.debug.xcconfig"; path = "Target Support Files/Pods-Meminter/Pods-Meminter.debug.xcconfig"; sourceTree = "<group>"; };
 		5C0C67B52C32DF1EDEDE444D /* Pods_Meminter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Meminter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66EBC6EFC3626676EEB20FC9 /* Pods-Meminter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Meminter.release.xcconfig"; path = "Target Support Files/Pods-Meminter/Pods-Meminter.release.xcconfig"; sourceTree = "<group>"; };
+		F7066A50257104A700A011A7 /* ErrorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
+		F7066A562571098800A011A7 /* Loggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
+		F7066A8C2574E15A00A011A7 /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; usesTabs = 0; };
+		F7066A922574E8DE00A011A7 /* SwipeReviewService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeReviewService.swift; sourceTree = "<group>"; };
+		F7066AC125762B6900A011A7 /* BuildMemService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildMemService.swift; sourceTree = "<group>"; };
 		F711427125540C2A00C3D4C4 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F72C908B25542BF6003D8B89 /* CreateMems.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CreateMems.storyboard; sourceTree = "<group>"; };
 		F72C909025542C00003D8B89 /* DrawViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawViewController.swift; sourceTree = "<group>"; };
 		F72C909125542C00003D8B89 /* DrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
 		F72C909225542C00003D8B89 /* MenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		F72C909325542C00003D8B89 /* BuildMemViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildMemViewController.swift; sourceTree = "<group>"; };
-		F72C909425542C00003D8B89 /* WriteTextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteTextViewController.swift; sourceTree = "<group>"; };
+		F72C909425542C00003D8B89 /* WriteTextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteTextViewController.swift; sourceTree = "<group>"; usesTabs = 0; };
 		F72C909B25542F6F003D8B89 /* DrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawViewModel.swift; sourceTree = "<group>"; };
 		F72C909F25543289003D8B89 /* URLRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestBuilder.swift; sourceTree = "<group>"; };
-		F757C6032554030000338DB2 /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; };
+		F73D3C0E25909DD1008B8C36 /* WriteTextService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTextService.swift; sourceTree = "<group>"; };
+		F757C6032554030000338DB2 /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; usesTabs = 0; };
 		F757C60D2554058C00338DB2 /* NetworkServicesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServicesAssembly.swift; sourceTree = "<group>"; };
 		F76130252555260900C5CDB5 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		F78BAAB8259B451100DDC9D9 /* DrawMemService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawMemService.swift; sourceTree = "<group>"; usesTabs = 0; };
+		F78BAABC259B47D400DDC9D9 /* TabbarControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarControllerFactory.swift; sourceTree = "<group>"; };
 		F79B42402553F5920099AF7B /* APIMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIMethod.swift; sourceTree = "<group>"; };
 		F79B42452553F6510099AF7B /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		F7B08C4725553965000BE757 /* MemsCreatorCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemsCreatorCoordinator.swift; sourceTree = "<group>"; };
@@ -110,7 +124,7 @@
 		F7F3D5C62553C026007A5929 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		F7F3D5CF2553C154007A5929 /* IntroContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroContentViewController.swift; sourceTree = "<group>"; };
 		F7F3D5D02553C154007A5929 /* IntroContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroContainerViewController.swift; sourceTree = "<group>"; };
-		F7F3D5D22553C154007A5929 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		F7F3D5D22553C154007A5929 /* BaseNetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNetworkService.swift; sourceTree = "<group>"; };
 		F7F3D5E62553C1AB007A5929 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7F3D5ED2553C629007A5929 /* IntroContentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroContentModel.swift; sourceTree = "<group>"; };
 		F7F3D5F62553CB73007A5929 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
@@ -134,7 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				0AB22945255C6C9800129EC7 /* TabbarController.swift */,
-				0A5A9DFB256AA8DF004B66C8 /* TabbarViewModel.swift */,
+				F78BAABC259B47D400DDC9D9 /* TabbarControllerFactory.swift */,
 			);
 			path = Tabbar;
 			sourceTree = "<group>";
@@ -227,6 +241,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		F7066A5925710A0000A011A7 /* Loadable */ = {
+			isa = PBXGroup;
+			children = (
+				F7BE0CB32553DC29003383E0 /* LoadableInput.swift */,
+				F7BE0CB82553DC5B003383E0 /* LoadableViewInput.swift */,
+			);
+			path = Loadable;
+			sourceTree = "<group>";
+		};
 		F72C908E25542C00003D8B89 /* Create Mem Screens */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +302,7 @@
 			isa = PBXGroup;
 			children = (
 				F79B42402553F5920099AF7B /* APIMethod.swift */,
+				F7066A50257104A700A011A7 /* ErrorType.swift */,
 			);
 			path = "Enums and types";
 			sourceTree = "<group>";
@@ -318,8 +342,8 @@
 		F7BE0CB62553DC2C003383E0 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				F7BE0CB32553DC29003383E0 /* LoadableInput.swift */,
-				F7BE0CB82553DC5B003383E0 /* LoadableViewInput.swift */,
+				F7066A5925710A0000A011A7 /* Loadable */,
+				F7066A562571098800A011A7 /* Loggable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -418,7 +442,12 @@
 		F7F3D5D12553C154007A5929 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
-				F7F3D5D22553C154007A5929 /* NetworkService.swift */,
+				F7F3D5D22553C154007A5929 /* BaseNetworkService.swift */,
+				F7066A8C2574E15A00A011A7 /* CatalogService.swift */,
+				F7066A922574E8DE00A011A7 /* SwipeReviewService.swift */,
+				F73D3C0E25909DD1008B8C36 /* WriteTextService.swift */,
+				F7066AC125762B6900A011A7 /* BuildMemService.swift */,
+				F78BAAB8259B451100DDC9D9 /* DrawMemService.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -585,26 +614,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7066AC225762B6900A011A7 /* BuildMemService.swift in Sources */,
 				F72C909525542C00003D8B89 /* DrawViewController.swift in Sources */,
 				0AA2CCC0255DC54000F1B393 /* SwipeMemReviewViewController.swift in Sources */,
+				F78BAABD259B47D400DDC9D9 /* TabbarControllerFactory.swift in Sources */,
 				F7BE0CDA2553E8FB003383E0 /* CatalogViewController.swift in Sources */,
 				F7FF65BA2553D037002A3A2F /* CommonServicesAssembly.swift in Sources */,
 				0AB9159F255C5534000D1DD6 /* TitlesCollectionContainerView.swift in Sources */,
 				F7B08C4C25553EAD000BE757 /* WriteTextViewModel.swift in Sources */,
 				0AB91599255C54E1000D1DD6 /* TitlesCell.swift in Sources */,
 				0AA2CCC1255DC54000F1B393 /* SwipeCollectionView.swift in Sources */,
-				F7F3D5DD2553C154007A5929 /* NetworkService.swift in Sources */,
+				F7F3D5DD2553C154007A5929 /* BaseNetworkService.swift in Sources */,
+				F7066A8D2574E15A00A011A7 /* CatalogService.swift in Sources */,
+				F7066A932574E8DE00A011A7 /* SwipeReviewService.swift in Sources */,
 				F7BE0CD02553E83C003383E0 /* MemModel.swift in Sources */,
+				F7066A51257104A700A011A7 /* ErrorType.swift in Sources */,
 				F7BE0CD12553E83C003383E0 /* MemImageModel.swift in Sources */,
 				0AA2CCC8255DC5D800F1B393 /* SwipeMemReviewViewModel.swift in Sources */,
 				0A018EFA255C5E1D009585DF /* Collection+Extension.swift in Sources */,
 				F7B08C4825553965000BE757 /* MemsCreatorCoordinator.swift in Sources */,
 				F7F3D5DC2553C154007A5929 /* IntroContainerViewController.swift in Sources */,
+				F7066A572571098800A011A7 /* Loggable.swift in Sources */,
 				F72C909925542C00003D8B89 /* WriteTextViewController.swift in Sources */,
 				F7BE0CB92553DC5B003383E0 /* LoadableViewInput.swift in Sources */,
 				F72C909625542C00003D8B89 /* DrawView.swift in Sources */,
+				F78BAAB9259B451100DDC9D9 /* DrawMemService.swift in Sources */,
 				F757C6042554030000338DB2 /* CatalogViewModel.swift in Sources */,
-				0A5A9DFC256AA8DF004B66C8 /* TabbarViewModel.swift in Sources */,
 				F757C60E2554058C00338DB2 /* NetworkServicesAssembly.swift in Sources */,
 				F7F3D5EE2553C629007A5929 /* IntroContentModel.swift in Sources */,
 				F7F3D5DB2553C154007A5929 /* IntroContentViewController.swift in Sources */,
@@ -616,6 +651,7 @@
 				F76130262555260900C5CDB5 /* UIView+Extension.swift in Sources */,
 				F72C909C25542F6F003D8B89 /* DrawViewModel.swift in Sources */,
 				F72C90A025543289003D8B89 /* URLRequestBuilder.swift in Sources */,
+				F73D3C0F25909DD1008B8C36 /* WriteTextService.swift in Sources */,
 				F7BE0CC22553DD6D003383E0 /* LoadableViewController.swift in Sources */,
 				0AA2CCBF255DC54000F1B393 /* SwipeViewCell.swift in Sources */,
 				F7F3D5B12553BF68007A5929 /* AppDelegate.swift in Sources */,

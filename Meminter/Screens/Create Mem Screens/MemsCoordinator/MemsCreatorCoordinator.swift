@@ -37,13 +37,13 @@ final class MemsCreatorCoordinator: UINavigationController {
     }
     
     func start() {
-        self.rootVC = self.drawMemFlow()
+        self.rootVC = self.buildMemFlow()
         self.pushViewController(self.rootVC, animated: false)
     }
     
     func drawMemFlow() -> DrawViewController? {
         guard let vc = UIStoryboard(name: self.storyBoardName, bundle: nil).instantiateViewController(withIdentifier: MemControllersId.draw.rawValue) as? DrawViewController else { return nil }
-        vc.viewModel = DrawViewModel(networkService: NetworkServicesAssembly.networkService(), userDefaultsProvider: CommonServicesAssembly.userDefaultsProvider())
+        vc.viewModel = DrawViewModel(networkService: NetworkServicesAssembly.drawMemService(), userDefaultsProvider: CommonServicesAssembly.userDefaultsProvider())
         vc.onEndThisFlow = { [weak self] in
             self?.nextFlow(.writeText)
         }
@@ -53,7 +53,7 @@ final class MemsCreatorCoordinator: UINavigationController {
     
     func writeMemTextFlow() -> WriteTextViewController? {
         guard let vc = UIStoryboard(name: self.storyBoardName, bundle: nil).instantiateViewController(withIdentifier: MemControllersId.writeText.rawValue) as? WriteTextViewController else { return nil }
-        vc.viewModel = WriteTextViewModel(networkService: NetworkServicesAssembly.networkService())
+        vc.viewModel = WriteTextViewModel(networkService: NetworkServicesAssembly.writeTextService())
         vc.onEndThisFlow = { [weak self] in
             self?.nextFlow(.buldMem)
         }
@@ -62,7 +62,7 @@ final class MemsCreatorCoordinator: UINavigationController {
     
     func buildMemFlow() -> BuildMemViewController? {
         guard let vc = UIStoryboard(name: self.storyBoardName, bundle: nil).instantiateViewController(withIdentifier: MemControllersId.buildMem.rawValue) as? BuildMemViewController else { return nil }
-        vc.viewModel = BuildMemViewModel(networkService: NetworkServicesAssembly.networkService(), userDefaultsProvider: CommonServicesAssembly.userDefaultsProvider())
+        vc.viewModel = BuildMemViewModel(buildMemService: NetworkServicesAssembly.buildMemService(), userDefaultsProvider: CommonServicesAssembly.userDefaultsProvider())
         vc.onEndThisFlow = { [weak self] in
             self?.nextFlow(.endCreateMemsFlow)
         }
